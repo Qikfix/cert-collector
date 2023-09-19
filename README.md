@@ -1,21 +1,26 @@
 # cert-collector
 Script to collect all the possible certificate information from Satellite, Capsule and Content Host
 
-It still under construction, but the main idea of usage it's something as mentioned below
+# Disclaimer
+This script doesn't intend to be supported or responsability of Red Hat, this is an independent initiative that will help for sure any Satellite case related to certs/ssl.
+
+<br>
+
+It still under construction, but the main idea of usage it's something as mentioned below:
 
 - On your Satellite Server
 ```
-# wget path_here
+# wget https://raw.githubusercontent.com/waldirio/cert-collector/main/cert-collector.sh
 # ./cert-collector.sh --server
 ```
 - On your Capsule Server
 ```
-# wget path_here
+# wget https://raw.githubusercontent.com/waldirio/cert-collector/main/cert-collector.sh
 # ./cert-collector.sh --capsule
 ```
 - On your Content Host
 ```
-# wget path_here
+# wget https://raw.githubusercontent.com/waldirio/cert-collector/main/cert-collector.sh
 # ./cert-collector.sh --content_host
 ```
 
