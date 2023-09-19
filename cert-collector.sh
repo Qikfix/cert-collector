@@ -50,6 +50,51 @@ server_func()
 
   echo "# Server" | tee -a $LOG_SRV_FILE
 
+
+  echo | tee -a $LOG_SRV_FILE
+  echo "# Checking the connection to cdn.redhat.com using the redhat-uep cert" | tee -a $LOG_SRV_FILE
+  echo "# echo | openssl s_client -connect cdn.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts" | tee -a $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+  echo | openssl s_client -connect cdn.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts &>> $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+
+  echo | tee -a $LOG_SRV_FILE
+  echo "# Checking the connection to subscription.rhsm.redhat.com using the redhat-uep cert" | tee -a $LOG_SRV_FILE
+  echo "# openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts" | tee -a $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+  echo | openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts &>> $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+
+  echo | tee -a $LOG_SRV_FILE
+  echo "# Checking the connection to subscription.rhsm.redhat.com using the redhat-uep cert enabling debug" | tee -a $LOG_SRV_FILE
+  echo "# openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts -debug" | tee -a $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+  echo | openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts -debug &>> $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+
+  echo | tee -a $LOG_SRV_FILE
+  echo "# Checking the subscription.rhsm.redhat.com head using curl" | tee -a $LOG_SRV_FILE
+  echo "# curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://subscription.rhsm.redhat.com" | tee -a $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+  curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://subscription.rhsm.redhat.com &>> $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+
+  echo | tee -a $LOG_SRV_FILE
+  echo "# Checking the cdn.redhat.com head using curl" | tee -a $LOG_SRV_FILE
+  echo "# curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://cdn.redhat.com" | tee -a $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+  curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://cdn.redhat.com &>> $LOG_SRV_FILE
+  echo "=====" >> $LOG_SRV_FILE
+
+  #echo | tee -a $LOG_SRV_FILE
+  #echo "# Checking XXX" | tee -a $LOG_SRV_FILE
+  #echo "# COMMAND_HERE" | tee -a $LOG_SRV_FILE
+  #echo "=====" >> $LOG_SRV_FILE
+  #COMMAND_HERE &>> $LOG_SRV_FILE
+  ##nmap --script  ssl-enum-ciphers -p 443 subscription.rhsm.redhat.com
+  #echo "=====" >> $LOG_SRV_FILE
+
+
   echo | tee -a $LOG_SRV_FILE
   echo "# Checking the Apache Cert" | tee -a $LOG_SRV_FILE
   echo "# echo | openssl s_client -connect $(hostname):$SRV_PORT_HTTPS" | tee -a $LOG_SRV_FILE
@@ -115,14 +160,9 @@ server_func()
 
 
 
-  #echo | openssl s_client -connect cdn.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts
-  #echo | openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts
-  ##nmap --script  ssl-enum-ciphers -p 443 subscription.rhsm.redhat.com
-  #curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://subscription.rhsm.redhat.com
-  #curl -vvv --head --cacert /etc/rhsm/ca/redhat-uep.pem https://cdn.redhat.com
-  #echo | openssl s_client -connect subscription.rhsm.redhat.com:443 -CAfile /etc/rhsm/ca/redhat-uep.pem -showcerts -debug
   #curl -s -v --header "Content-Type:application/json" --request GET --cacert /etc/pki/katello/certs/katello-server-ca.crt https://$(hostname)/katello/api/status | python3 -m json.tool
-
+  echo
+  echo "Please, check the file $LOG_SRV_FILE for the complete information"
 }
 
 capsule_func()
