@@ -361,6 +361,28 @@ report()
       # =============================
 
 
+      ## Check for self signed or custom cert
+      # =============================
+      if [ -d /root/ssl-build ]; then
+        katello_default_ca_md5=$(md5sum /root/ssl-build/katello-default-ca.crt | awk '{print $1}')
+        katello_server_ca_md5=$(md5sum /root/ssl-build/katello-server-ca.crt | awk '{print $1}')
+	server_cert=$(grep "^  server_cert: $" /etc/foreman-installer/scenarios.d/satellite-answers.yaml | wc -l)
+	server_cert_req=$(grep "^  server_cert_req: $" /etc/foreman-installer/scenarios.d/satellite-answers.yaml | wc -l)
+	server_ca_cert=$(grep "^  server_ca_cert: $" /etc/foreman-installer/scenarios.d/satellite-answers.yaml | wc -l)
+
+	if [ "$katello_default_ca_md5" == "$katello_server_ca_md5" ] && [ "$server_cert" -eq 1 ] && [ "$server_cert_req" -eq 1 ] && [ "$server_ca_cert" -eq 1 ]; then
+	  current_cert="SELF_SIGNED"
+	else
+	  current_cert="CUSTOM"
+	fi
+      else
+	current_cert="MISSING_SSL_BUILD_DIR"
+      fi
+      # =============================
+
+
+
+
     echo  "server"
     echo "####################################################"
     echo "# Communication with subscription.rhsm.redhat.com"
@@ -371,7 +393,10 @@ report()
     echo "#   via openssl (2 checks) ................: ${check_response__openssl_cdn_redhat_com_showcerts}"
     echo "#   via curl (4 checks) ...................: ${check_response__curl_cdn_redhat_com_verbose_head}"
     echo "#"
-    echo "# Is /root/ssl-build present? .............: ${check_dir_ssl_build}"
+    echo "# Is /root/ssl-build present? (1 check) ...: ${check_dir_ssl_build}"
+    echo "#"
+    echo "# Self Signed or Custom Cert? (5 checks) ..: ${current_cert}"
+    echo "#"
     echo "#"
     echo "# Communication with Satellite - Candlepin"
     echo "#   via openssl (2 checks) ................: ${check_response__openssl_localhost_23443}"
