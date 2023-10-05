@@ -351,6 +351,16 @@ report()
       # ---
       # =============================
 
+      ## Check the directory /root/ssl-build
+      # =============================
+      if [ -d /root/ssl-build ]; then
+        check_dir_ssl_build="OK"
+      else
+        check_dir_ssl_build="FAIL"
+      fi
+      # =============================
+
+
     echo  "server"
     echo "####################################################"
     echo "# Communication with subscription.rhsm.redhat.com"
@@ -360,6 +370,8 @@ report()
     echo "# Communication with cdn.redhat.com"
     echo "#   via openssl (2 checks) ................: ${check_response__openssl_cdn_redhat_com_showcerts}"
     echo "#   via curl (4 checks) ...................: ${check_response__curl_cdn_redhat_com_verbose_head}"
+    echo "#"
+    echo "# Is /root/ssl-build present? .............: ${check_dir_ssl_build}"
     echo "#"
     echo "# Communication with Satellite - Candlepin"
     echo "#   via openssl (2 checks) ................: ${check_response__openssl_localhost_23443}"
