@@ -409,6 +409,36 @@ report()
       fi
       # =============================
 
+      ## RSA Public Key Size in bits
+      # =============================
+      if [ -d /root/ssl-build ]; then
+        katello_default_ca_public_key_size=$(openssl x509 -in /root/ssl-build/katello-default-ca.crt -text | grep "RSA Public-Key:" | cut -d"(" -f2 | awk '{print $1}')
+
+	if [ "$katello_default_ca_public_key_size" -ge 2048 ]; then
+	  default_ca_key_size="OK"
+	else
+	  default_ca_key_size="FAIL"
+	fi
+      else
+	default_ca_key_size="MISSING_SSL_BUILD_DIR"
+      fi
+
+
+      if [ -d /root/ssl-build ]; then
+        katello_server_ca_public_key_size=$(openssl x509 -in /root/ssl-build/katello-server-ca.crt -text | grep "RSA Public-Key:" | cut -d"(" -f2 | awk '{print $1}')
+
+	if [ "$katello_server_ca_public_key_size" -ge 2048 ]; then
+	  server_ca_key_size="OK"
+	else
+	  server_ca_key_size="FAIL"
+	fi
+      else
+	server_ca_key_size="MISSING_SSL_BUILD_DIR"
+      fi
+      # =============================
+
+
+
 
     echo  "server"
     echo "####################################################"
@@ -428,6 +458,9 @@ report()
     echo "#   katello-default-ca.crt (1 check) ......: ${default_ca_true_extension}"
     echo "#   katello-server-ca.crt (1 check) .......: ${server_ca_true_extension}"
     echo "#"
+    echo "# RSA Public Key size gt or eq to 2048"
+    echo "#   katello-default-ca.crt (1 check) ......: ${default_ca_key_size}"
+    echo "#   katello-server-ca.crt (1 check) .......: ${server_ca_key_size}"
     echo "#"
     echo "# Communication with Satellite - Candlepin"
     echo "#   via openssl (2 checks) ................: ${check_response__openssl_localhost_23443}"
