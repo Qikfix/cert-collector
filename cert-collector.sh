@@ -381,6 +381,33 @@ report()
       # =============================
 
 
+      ## Check for extension "CA:TRUE"
+      # =============================
+      if [ -d /root/ssl-build ]; then
+        katello_default_ca=$(openssl x509 -in /root/ssl-build/katello-default-ca.crt -text | grep "^                CA:TRUE$" | wc -l)
+
+	if [ "$katello_default_ca" -eq 1 ]; then
+	  default_ca_true_extension="OK"
+	else
+	  default_ca_true_extension="FAIL"
+	fi
+      else
+	default_ca_true_extension="MISSING_SSL_BUILD_DIR"
+      fi
+
+
+      if [ -d /root/ssl-build ]; then
+        katello_server_ca=$(openssl x509 -in /root/ssl-build/katello-server-ca.crt -text | grep "^                CA:TRUE$" | wc -l)
+
+	if [ "$katello_server_ca" -eq 1 ]; then
+	  server_ca_true_extension="OK"
+	else
+	  server_ca_true_extension="FAIL"
+	fi
+      else
+	server_ca_true_extension="MISSING_SSL_BUILD_DIR"
+      fi
+      # =============================
 
 
     echo  "server"
@@ -396,6 +423,10 @@ report()
     echo "# Is /root/ssl-build present? (1 check) ...: ${check_dir_ssl_build}"
     echo "#"
     echo "# Self Signed or Custom Cert? (5 checks) ..: ${current_cert}"
+    echo "#"
+    echo "# X509v3 extensions 'CA: TRUE'"
+    echo "#   katello-default-ca.crt (1 check) ......: ${default_ca_true_extension}"
+    echo "#   katello-server-ca.crt (1 check) .......: ${server_ca_true_extension}"
     echo "#"
     echo "#"
     echo "# Communication with Satellite - Candlepin"
